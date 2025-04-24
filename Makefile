@@ -24,6 +24,8 @@ run: $(OUT)
 	./$(OUT)
 
 clean:
-	rm -f build/*.o build/*.exe
+	rm -f build/*.o build/*.exe || del /Q build\*.o build\*.exe
+	@echo Cleaned...
+	
 
 .PHONY: all run clean
