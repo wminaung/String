@@ -1,53 +1,10 @@
 #include "String.hpp"
+#include "Console.cpp"
 #include <iostream>
-
-String::String() : value(nullptr), length(0) {}
-
-String::String(const char *value) : String() {
-  this->length = lengthof(value);
-  this->value = new char[this->length + 1];
-  this->_initValue(value);
-}
-
-// Deep copy constructor
-String::String(const String &other) {
-  this->length = other.length;              // Copy the length
-  this->value = new char[this->length + 1]; // Allocate new memory
-  for (int i = 0; i < this->length; i++) {
-    this->value[i] = other.value[i]; // Copy each character
-  }
-  this->value[this->length] = '\0'; // Add null terminator
-}
-
-// Copy assignment operator
-String &String::operator=(const String &other) {
-  if (this != &other) {                       // Prevent self-assignment
-    delete[] this->value;                     // Free existing memory
-    this->length = other.length;              // Copy the length
-    this->value = new char[this->length + 1]; // Allocate new memory
-    for (int i = 0; i < this->length; i++) {
-      this->value[i] = other.value[i]; // Copy each character
-    }
-    this->value[this->length] = '\0'; // Add null terminator
-  }
-  return *this; // Return the current object to allow chaining (e.g., a = b = c)
-}
-
-char &String::operator[](int index) {
-  //
-  return this->at(index);
-}
-
-bool String::operator==(const String &other) const {
-  return this->isEqual(other);
-}
-
-String::~String() { delete[] value; }
 
 //-------------------- Private functions --------------------//
 
 void String::_initValue(const char *value) {
-  this->value = new char[this->length + 1];
   for (int i = 0; i <= this->length; i++) {
     this->value[i] = value[i];
   }
@@ -57,14 +14,17 @@ void String::_initValue(const char *value) {
 
 int String::getLength() const { return this->length; }
 
-const char *String::getValue() const {
-  //
-  return this->value;
-}
+const char *String::getValue() const { return this->value; }
 
 void String::setValue(const char *value) {
+
+  if (this->value == value) {
+    return;
+  }
+
   if (this->value != nullptr) {
     delete[] this->value;
+    this->value = nullptr;
   }
   this->length = lengthof(value);
 
@@ -72,28 +32,35 @@ void String::setValue(const char *value) {
   this->_initValue(value);
 };
 
-char *String::append(const char *appendValue) {
+String &String::append(const String &other) {
 
-  if (this->value == nullptr) {
-    this->length = lengthof(appendValue);
-    this->value = new char[this->length + 1];
-    strcopy(this->value, appendValue);
-    return this->value;
+  if (this->isEmpty()) {
+    this->cpy(other);
+    return *this;
   }
 
-  int newLength = this->length + lengthof(appendValue);
-  std::cout << this->length << "+" << lengthof(appendValue) << std::endl;
-  std::cout << newLength << std::endl;
+  int newLength = this->length + other.length;
+  char *temp = new char[newLength + 1]; // +1 for '\0'
 
-  char *temp = new char[newLength + 1];
+  // Copy this->value
+  for (int i = 0; i < this->length; i++) {
+    temp[i] = this->value[i];
+  }
 
-  strcopy(temp, this->value);                // copy old value
-  strcopy(temp + this->length, appendValue); // append new value
-  delete[] this->value;                      // free old memory
+  // Append other.value
+  for (int i = 0; i < other.length; i++) {
+    temp[this->length + i] = other.value[i];
+  }
+
+  temp[newLength] = '\0'; // null terminator
+
+  delete[] this->value;
+  this->value = nullptr; // free old memory
   this->value = temp;
+  temp = nullptr;
   this->length = newLength;
 
-  return this->value;
+  return *this; // return current object reference
 }
 
 bool String::isEmpty() const {
@@ -131,14 +98,7 @@ bool String::isEqual(const std::string &other) const {
   return true;
 }
 
-// char *String::at(int index) {
-//   if (index < 0 || index >= this->length) {
-//     throw std::out_of_range("Index is out of range");
-//   }
-//   return &this->value[index];
-// }
-
-char &String::at(int index) {
+char &String::at(const int index) {
 
   if (index < 0 || index >= this->length) {
     throw std::out_of_range("Index is out of range");
@@ -147,7 +107,7 @@ char &String::at(int index) {
 }
 
 String &String::trim() {
-  if (this->length == 0) {
+  if (isEmpty()) {
     return *this;
   }
   int start = 0;
@@ -165,7 +125,10 @@ String &String::trim() {
   }
 
   if (end < start) {
-    delete[] this->value;
+    if (!this->isEmpty()) {
+      delete[] this->value;
+      this->value = nullptr;
+    }
     this->value = new char[1];
     this->value[0] = '\0';
     this->length = 0;
@@ -179,11 +142,156 @@ String &String::trim() {
   }
   temp[newLen] = '\0';
 
-  delete[] this->value;
+  if (!this->isEmpty()) {
+    delete[] this->value;
+    this->value = nullptr;
+  }
   this->value = temp;
+  temp = nullptr;
   this->length = newLen;
 
   return *this;
+}
+
+int String::cmp(const String &other) const {
+  if (this->length != other.length) {
+    int min = this->length < other.length ? this->length : other.length;
+    for (int i = 0; i < min; i++) {
+      if (this->value[i] < other.value[i]) {
+        return -1;
+      } else if (this->value[i] > other.value[i]) {
+        return 1;
+      }
+    }
+
+    return this->length - other.length > 0 ? 1 : -1;
+  }
+
+  // if lengths are equal
+
+  for (int i = 0; i < this->length; i++) {
+    if (this->value[i] < other.value[i]) {
+      return -1;
+    } else if (this->value[i] > other.value[i]) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+int String::cmp(const String &other, int limit) const {
+
+  if (limit > this->length || limit > other.length) {
+    limit = this->length < other.length ? this->length : other.length;
+  }
+
+  if (this->length != other.length) {
+    for (int i = 0; i < limit; i++) {
+      if (this->value[i] < other.value[i]) {
+        return -1;
+      } else if (this->value[i] > other.value[i]) {
+        return 1;
+      }
+    }
+    return 0;
+  }
+
+  // if lengths are equal
+
+  for (int i = 0; i < limit; i++) {
+    if (this->value[i] < other.value[i]) {
+      return -1;
+    } else if (this->value[i] > other.value[i]) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+String String::substr(int start, int end) {
+
+  if (start < 0 || start >= this->length) {
+    throw std::out_of_range("Start index is out of range");
+  }
+
+  if (end < start || end > this->length) {
+    throw std::out_of_range("End index is out of range");
+  }
+
+  if (start == end) {
+    return String("");
+  }
+
+  int len = end - start;
+  char *temp = new char[len + 1];
+  for (int i = 0; i < len; i++) {
+    temp[i] = this->value[start + i];
+  }
+  temp[len] = '\0';
+
+  String result(temp);
+  delete[] temp;
+  temp = nullptr;
+
+  return result;
+}
+
+String &String::cpy(const String &other) {
+  if (this == &other)
+    return *this;
+
+  if (!this->isEmpty()) {
+    delete[] this->value;
+    this->value = nullptr;
+  }
+  this->length = other.length;
+  this->value = new char[this->length + 1];
+
+  for (int i = 0; i < this->length; i++) {
+    this->value[i] = other.value[i];
+  }
+
+  this->value[this->length] = '\0';
+
+  return *this;
+}
+
+String *String::split(String delimiter, int &outCount) {
+  //
+  int delen = delimiter.length;
+
+  if (delen == 0) {
+    outCount = this->length;
+    String *arr = new String[outCount];
+
+    for (int i = 0; i < outCount; i++) {
+      arr[i] = String(this->value[i]);
+    }
+
+    for (int i = 0; i < outCount; i++) {
+      std::cout << " arr[i] " << i << " " << arr[i] << std::endl;
+    }
+
+    return arr;
+  }
+  //
+
+  // int index = 0;
+  // int count = 0;
+
+  // while (index < this->length) {
+
+  // if (delimiter.cmp() == 0) {
+  //   index += delen;
+  //   count++;
+  // } else {
+  //   break;
+  // }
+  //
+
+  return nullptr;
 }
 
 //-------------------- Static functions --------------------//
@@ -210,8 +318,4 @@ int String::lengthof(const char *value) {
   return count;
 }
 
-//-------------------- Non member functions --------------------//
-std::ostream &operator<<(std::ostream &os, const String &str) {
-  os << str.getValue();
-  return os;
-}
+int String::diff(char a, char b) { return a - b; }

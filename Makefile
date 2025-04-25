@@ -1,31 +1,43 @@
+# Compiler and Flags
 CXX = g++
 CFLAGS = -g -std=c++11 -Wall
-OBJ = build/main.o build/String.o build/Console.o
-OUT = build/main.exe
 
-all:  $(OUT)
+# Directories
+SRC_DIR = src
+BUILD_DIR = build
 
-$(OUT): $(OBJ) 
+# Source files
+SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/String.cpp $(SRC_DIR)/StringConstructor.cpp $(SRC_DIR)/StringOperator.cpp $(SRC_DIR)/Console.cpp
+
+# Object files
+OBJ = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+
+# Output executable
+OUT = $(BUILD_DIR)/main.exe
+
+# Default target (build executable)
+all: $(OUT)
+
+# Link object files to create the executable
+$(OUT): $(OBJ)
 	$(CXX) $(CFLAGS) $(OBJ) -o $(OUT)
 
-build:
-	mkdir -p build
+# Create build directory if it doesn't exist
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-build/main.o: src/main.cpp src/String.hpp | build
-	$(CXX) $(CFLAGS) -c src/main.cpp -o build/main.o
+# Compile each .cpp file into a .o object file
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	$(CXX) $(CFLAGS) -c $< -o $@
 
-build/String.o: src/String.cpp src/String.hpp | build
-	$(CXX) $(CFLAGS) -c src/String.cpp -o build/String.o
-
-build/Console.o: src/Console.cpp | build
-	$(CXX) $(CFLAGS) -c src/Console.cpp -o build/Console.o
-
+# Run the executable
 run: $(OUT)
 	./$(OUT)
 
+# Clean up generated files
 clean:
-	rm -f build/*.o build/*.exe || del /Q build\*.o build\*.exe
+	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/*.exe
 	@echo Cleaned...
-	
 
+# Ensure the "all", "run", and "clean" targets are not confused with filenames
 .PHONY: all run clean

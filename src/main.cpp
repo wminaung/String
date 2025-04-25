@@ -1,10 +1,63 @@
 #include "Console.cpp"
 #include "String.hpp"
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 int main() {
+  if (0) {
+    std::cout << "------------<String::operator+>------------" << std::endl;
+    String s1 = "<a>";
+    String s2 = "<b>";
+    std::cout << "(s1 + s2) = " << (s1 + s2)
+              << std::endl; // create new String object
+    std::cout << " (s1 + s1)  = " << (s1 + s1) << std::endl;
+    s1 = s1 + s1 + s2;
+    std::cout << "s1 = s1 + s1 + s2 = " << s1 << std::endl;
+  }
+  if (0) {
+    std::cout << "------------<String::append>------------" << std::endl;
+    String s1 = "<abcdef>";
+    s1.append(s1);
+    std::cout << "s1 = " << s1 << std::endl;
+    s1 += s1;
+    std::cout << "s1 = " << s1 << std::endl;
+  }
+
+  if (0) {
+    std::cout << "------------<String::cpy>------------" << std::endl;
+    String s1 = "abcdef";
+    s1.cpy(s1);
+    std::cout << "s1 = " << s1 << std::endl;
+    s1.cpy("muda muda muda muda");
+    std::cout << "s1 = " << s1 << std::endl;
+    s1.setValue(s1.getValue());
+    std::cout << "s1 s= " << s1 << std::endl;
+  }
+
+  if (0) {
+    std::cout << "------------<String::substr>------------" << std::endl;
+    String s1 = "abcdef";
+    String ss = s1.substr(1, 2);
+    String gg = s1.substr(0, 3);
+    std::cout << "s1.substr(1, 2) = " << ss << "<<<" << std::endl;
+    std::cout << "s1.substr(0, 3) = " << gg << "<<<" << std::endl;
+    if (000) {
+      s1.substr(0, 33232); // it will throw error
+    }
+  }
+
+  if (0) {
+    std::cout << "------------<String::cmp>------------" << std::endl;
+    String s1 = "abc";
+    String s2 = "defg";
+    std::cout << "s1 = " << s1 << std::endl;
+    std::cout << "s2 = " << s2 << std::endl;
+    std::cout << "s1 == s2 = " << (s1 == s2) << std::endl; // true
+    std::cout << "s1.cmp(s2) = " << s1.cmp(s2) << std::endl;
+    std::cout << "s1.cmp(s2) = " << s1.cmp(s2, 00) << std::endl;
+  }
 
   if (0) {
     std::cout << "------------<String::trim>------------" << std::endl;
