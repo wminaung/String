@@ -11,7 +11,7 @@ String &String::operator=(const String &other) {
     }
     this->length = other.length;              // Copy the length
     this->value = new char[this->length + 1]; // Allocate new memory
-    for (int i = 0; i < this->length; i++) {
+    for (int_t i = 0; i < this->length; i++) {
       this->value[i] = other.value[i]; // Copy each character
     }
     this->value[this->length] = '\0'; // Add null terminator
@@ -22,7 +22,7 @@ String &String::operator=(const String &other) {
 /**
  * Overload the [] operator to access characters in a String object.
  */
-char &String::operator[](int index) {
+char &String::operator[](int_t index) {
   //
   return this->at(index);
 }
@@ -35,15 +35,15 @@ bool String::operator==(const String &other) const {
 }
 
 String String::operator+(const String &other) const {
-  int newLength = this->length + other.length;
+  int_t newLength = this->length + other.length;
   char *newValue = new char[newLength + 1];
 
   // Copy first string
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     newValue[i] = this->value[i];
   }
   // Append second string
-  for (int i = 0; i < other.length; i++) {
+  for (int_t i = 0; i < other.length; i++) {
     newValue[this->length + i] = other.value[i];
   }
   newValue[newLength] = '\0';

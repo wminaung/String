@@ -1,11 +1,12 @@
 #include "String.hpp"
 #include <iostream>
 
-int String::global_id_counter = 0;
+int_t String::global_id_counter = 0;
 
 String::String() : value(nullptr), length(0) {
   this->id = ++String::global_id_counter;
-  std::cout << std::endl << "String " << this->id << " created." << std::endl;
+  // std::cout << std::endl << "String " << this->id << " created." <<
+  // std::endl;
 }
 
 /**
@@ -60,7 +61,7 @@ String::String(const char ch) : String() {
 String::String(const String &other) : String() {
   this->length = other.length;              // Copy the length
   this->value = new char[this->length + 1]; // Allocate new memory
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     this->value[i] = other.value[i]; // Copy each character
   }
   this->value[this->length] = '\0'; // Add null terminator
@@ -68,9 +69,9 @@ String::String(const String &other) : String() {
 
 String::~String() {
   //
-  std::cout << std::endl
-            << "String id = " << this->id << " value = " << this->value
-            << " deleted" << std::endl;
+  //   std::cout << std::endl
+  // << "String id = " << this->id << " value = " << this->value << " deleted"
+  //  << std::endl;
   delete[] this->value;
   this->value = nullptr;
 }

@@ -3,3 +3,4 @@ build/
 *.txt
 *.js
 *example.cpp
+__tests__

@@ -2,14 +2,15 @@
 #define STRING_H
 #include <string>
 #include <vector>
-
+typedef int int_t;
 class String {
+
 private:
-  int id;
-  static int global_id_counter;
+  int_t id;
+  static int_t global_id_counter;
   char *value;
   void _initValue(const char *value);
-  int length;
+  int_t length;
 
 public:
   String();
@@ -21,34 +22,34 @@ public:
 
   // Operators
   String &operator=(const String &other); // Copy assignment
-  char &operator[](int index);
+  char &operator[](int_t index);
   bool operator==(const String &other) const;
   String operator+(const String &other) const;
   String &operator+=(const String &other);
 
   // Member functions
-  int getLength() const;
+  int_t getLength() const;
   const char *getValue() const;
   void setValue(const char *value);
   String &append(const String &other);
   bool isEmpty() const;
   std::string toString() const;
   bool isEqual(const String &other) const;
-  bool isEqual(const std::string &other) const;
-  char &at(const int index);
+  char &at(const int_t index);
   String &trim();
-  int cmp(const String &other) const;
-  int cmp(const String &other, int limit) const;
-  String substr(int start, int end);
+  int_t cmp(const String &other) const;
+  int_t cmp(const String &other, int_t limit) const;
+  String substr(int_t start_index);
+  String substr(int_t start, int_t end);
   String &cpy(const String &other);
-  String *split(String delimiter, int &outCount);
+  String *split(String delimiter, int_t &outCount);
 
   // std::vector<String> split(char delimiter);
 
   // static functions
   static bool strcopy(char *dest, const char *src);
-  static int lengthof(const char *value);
-  static int diff(char a, char b);
+  static int_t lengthof(const char *value);
+  static int_t diff(char a, char b);
 };
 std::ostream &operator<<(std::ostream &os, const String &str);
 #endif

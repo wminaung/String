@@ -5,14 +5,14 @@
 //-------------------- Private functions --------------------//
 
 void String::_initValue(const char *value) {
-  for (int i = 0; i <= this->length; i++) {
+  for (int_t i = 0; i <= this->length; i++) {
     this->value[i] = value[i];
   }
 }
 
 //-------------------- Public functions --------------------//
 
-int String::getLength() const { return this->length; }
+int_t String::getLength() const { return this->length; }
 
 const char *String::getValue() const { return this->value; }
 
@@ -39,16 +39,16 @@ String &String::append(const String &other) {
     return *this;
   }
 
-  int newLength = this->length + other.length;
+  int_t newLength = this->length + other.length;
   char *temp = new char[newLength + 1]; // +1 for '\0'
 
   // Copy this->value
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     temp[i] = this->value[i];
   }
 
   // Append other.value
-  for (int i = 0; i < other.length; i++) {
+  for (int_t i = 0; i < other.length; i++) {
     temp[this->length + i] = other.value[i];
   }
 
@@ -76,7 +76,7 @@ bool String::isEqual(const String &other) const {
   if (this->length != other.length) {
     return false;
   }
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     if (this->value[i] != other.value[i]) {
       return false;
     }
@@ -84,21 +84,7 @@ bool String::isEqual(const String &other) const {
   return true;
 }
 
-bool String::isEqual(const std::string &other) const {
-
-  if (this->length != static_cast<int>(other.length())) {
-    return false;
-  }
-
-  for (int i = 0; i < this->length; i++) {
-    if (this->value[i] != other[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-char &String::at(const int index) {
+char &String::at(const int_t index) {
 
   if (index < 0 || index >= this->length) {
     throw std::out_of_range("Index is out of range");
@@ -110,11 +96,11 @@ String &String::trim() {
   if (isEmpty()) {
     return *this;
   }
-  int start = 0;
+  int_t start = 0;
   while (this->value[start] == ' ') {
     start++;
   }
-  int end = this->length - 1;
+  int_t end = this->length - 1;
 
   while (this->value[end] == ' ') {
     end--;
@@ -135,9 +121,9 @@ String &String::trim() {
     return *this;
   }
 
-  int newLen = end - start + 1;
+  int_t newLen = end - start + 1;
   char *temp = new char[newLen + 1];
-  for (int i = 0; i < newLen; ++i) {
+  for (int_t i = 0; i < newLen; ++i) {
     temp[i] = this->value[start + i];
   }
   temp[newLen] = '\0';
@@ -153,10 +139,10 @@ String &String::trim() {
   return *this;
 }
 
-int String::cmp(const String &other) const {
+int_t String::cmp(const String &other) const {
   if (this->length != other.length) {
-    int min = this->length < other.length ? this->length : other.length;
-    for (int i = 0; i < min; i++) {
+    int_t min = this->length < other.length ? this->length : other.length;
+    for (int_t i = 0; i < min; i++) {
       if (this->value[i] < other.value[i]) {
         return -1;
       } else if (this->value[i] > other.value[i]) {
@@ -169,7 +155,7 @@ int String::cmp(const String &other) const {
 
   // if lengths are equal
 
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     if (this->value[i] < other.value[i]) {
       return -1;
     } else if (this->value[i] > other.value[i]) {
@@ -180,14 +166,14 @@ int String::cmp(const String &other) const {
   return 0;
 }
 
-int String::cmp(const String &other, int limit) const {
+int_t String::cmp(const String &other, int_t limit) const {
 
   if (limit > this->length || limit > other.length) {
     limit = this->length < other.length ? this->length : other.length;
   }
 
   if (this->length != other.length) {
-    for (int i = 0; i < limit; i++) {
+    for (int_t i = 0; i < limit; i++) {
       if (this->value[i] < other.value[i]) {
         return -1;
       } else if (this->value[i] > other.value[i]) {
@@ -199,7 +185,7 @@ int String::cmp(const String &other, int limit) const {
 
   // if lengths are equal
 
-  for (int i = 0; i < limit; i++) {
+  for (int_t i = 0; i < limit; i++) {
     if (this->value[i] < other.value[i]) {
       return -1;
     } else if (this->value[i] > other.value[i]) {
@@ -210,24 +196,39 @@ int String::cmp(const String &other, int limit) const {
   return 0;
 }
 
-String String::substr(int start, int end) {
+String String::substr(int_t start_index) {
 
-  if (start < 0 || start >= this->length) {
-    throw std::out_of_range("Start index is out of range");
-  }
-
-  if (end < start || end > this->length) {
-    throw std::out_of_range("End index is out of range");
-  }
-
-  if (start == end) {
+  if (start_index < 0 || start_index >= this->length) {
     return String("");
   }
 
-  int len = end - start;
+  int_t len = this->length - start_index;
   char *temp = new char[len + 1];
-  for (int i = 0; i < len; i++) {
-    temp[i] = this->value[start + i];
+  for (int_t i = 0; i < len; i++) {
+    temp[i] = this->value[start_index + i];
+  }
+  temp[len] = '\0';
+
+  String result(temp);
+  delete[] temp;
+  temp = nullptr;
+
+  return result;
+}
+String String::substr(int_t start_index, int_t length) {
+
+  if (start_index < 0 || start_index >= this->length || length <= 0) {
+    return String("");
+  }
+
+  int_t len = length;
+  if (start_index + length > this->length) {
+    len = this->length - start_index;
+  }
+
+  char *temp = new char[len + 1];
+  for (int_t i = 0; i < len; i++) {
+    temp[i] = this->value[start_index + i];
   }
   temp[len] = '\0';
 
@@ -249,7 +250,7 @@ String &String::cpy(const String &other) {
   this->length = other.length;
   this->value = new char[this->length + 1];
 
-  for (int i = 0; i < this->length; i++) {
+  for (int_t i = 0; i < this->length; i++) {
     this->value[i] = other.value[i];
   }
 
@@ -258,19 +259,19 @@ String &String::cpy(const String &other) {
   return *this;
 }
 
-String *String::split(String delimiter, int &outCount) {
+String *String::split(String delimiter, int_t &outCount) {
   //
-  int delen = delimiter.length;
+  int_t delen = delimiter.length;
 
   if (delen == 0) {
     outCount = this->length;
     String *arr = new String[outCount];
 
-    for (int i = 0; i < outCount; i++) {
+    for (int_t i = 0; i < outCount; i++) {
       arr[i] = String(this->value[i]);
     }
 
-    for (int i = 0; i < outCount; i++) {
+    for (int_t i = 0; i < outCount; i++) {
       std::cout << " arr[i] " << i << " " << arr[i] << std::endl;
     }
 
@@ -278,8 +279,8 @@ String *String::split(String delimiter, int &outCount) {
   }
   //
 
-  // int index = 0;
-  // int count = 0;
+  // int_t index = 0;
+  // int_t count = 0;
 
   // while (index < this->length) {
 
@@ -300,7 +301,7 @@ bool String::strcopy(char *dest, const char *src) {
   if (dest == nullptr || src == nullptr)
     return false;
 
-  int i = 0;
+  int_t i = 0;
   while (src[i] != '\0') {
     dest[i] = src[i];
     i++;
@@ -310,12 +311,12 @@ bool String::strcopy(char *dest, const char *src) {
   return true;
 }
 
-int String::lengthof(const char *value) {
-  int count = 0;
+int_t String::lengthof(const char *value) {
+  int_t count = 0;
   while (value[count] != '\0') {
     count++;
   }
   return count;
 }
 
-int String::diff(char a, char b) { return a - b; }
+int_t String::diff(char a, char b) { return a - b; }
