@@ -1,7 +1,9 @@
 #ifndef STRING_H
 #define STRING_H
+#include "Iterator.hpp"
 #include <string>
 #include <vector>
+
 typedef int int_t;
 class String {
 
@@ -43,7 +45,8 @@ public:
   String substr(int_t start, int_t end);
   String &cpy(const String &other);
   String *split(String delimiter, int_t &outCount);
-
+  Iterator<char> begin();
+  Iterator<char> end();
   // std::vector<String> split(char delimiter);
 
   // static functions

@@ -1,6 +1,7 @@
 #include "Console.cpp"
 #include "String.hpp"
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -38,6 +39,26 @@ public:
 
 int main() {
   WinTest win_test;
+
+  if (10) {
+    std::cout << "------------<String::Iterator>------------" << std::endl;
+    String s1 = "12345";
+    String s2 = "<b>dkdkdkd";
+    for (auto ptr = s1.begin(); ptr != s1.end(); ++ptr) {
+      *ptr = '0';
+    }
+    win_test.it("should return \"00000\"", s1 == "00000");
+
+    int s2_len = 0;
+    auto it = s2.begin();
+    while (it != s2.end()) {
+      s2_len++;
+      ++it;
+    }
+    std::stringstream ss;
+    ss << "should return " << s2.getLength() << std::endl;
+    win_test.it(ss.str(), s2_len == s2.getLength());
+  }
 
   if (10) {
     std::cout << "------------<String::operator+>------------" << std::endl;

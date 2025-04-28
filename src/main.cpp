@@ -1,12 +1,21 @@
-#include "Console.cpp"
 #include "String.hpp"
-#include <cstring>
-#include <fstream>
 #include <iostream>
 #include <string>
 
 int main() {
-  String name = "Hello";
-
+  String p = "John Doe";
+  int i = 0;
+  for (auto ptr = p.begin(); ptr != p.end(); ++ptr) {
+    i++;
+    if (i == 3) {
+      *ptr = '3';
+    }
+    std::cout << *ptr << '-';
+  }
+  std::cout << std::endl;
+  for (auto ptr = p.begin(); ptr != p.end(); ++ptr) {
+    std::cout << *ptr << '-';
+  }
   return 0;
+  ///
 }

@@ -1,5 +1,5 @@
 #include "String.hpp"
-#include "Console.cpp"
+#include "Iterator.hpp"
 #include <iostream>
 
 //-------------------- Private functions --------------------//
@@ -293,6 +293,12 @@ String *String::split(String delimiter, int_t &outCount) {
   //
 
   return nullptr;
+}
+
+Iterator<char> String::begin() { return Iterator<char>(this->value); }
+
+Iterator<char> String::end() {
+  return Iterator<char>(this->value + this->length);
 }
 
 //-------------------- Static functions --------------------//
