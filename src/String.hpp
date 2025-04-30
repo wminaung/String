@@ -11,7 +11,7 @@ private:
   int_t id;
   static int_t global_id_counter;
   char *value;
-  void _initValue(const char *value);
+  void _copyfrom(const char *value);
   int_t length;
 
 public:
@@ -44,9 +44,11 @@ public:
   String substr(int_t start_index);
   String substr(int_t start, int_t end);
   String &cpy(const String &other);
-  String *split(String delimiter, int_t &outCount);
+  String *split(const String delimiter, int_t &outCount);
   Iterator<char> begin();
   Iterator<char> end();
+  bool includes(String searchString);
+  int_t countOccurrences(String target);
   // std::vector<String> split(char delimiter);
 
   // static functions

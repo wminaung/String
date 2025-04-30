@@ -4,7 +4,7 @@
 
 //-------------------- Private functions --------------------//
 
-void String::_initValue(const char *value) {
+void String::_copyfrom(const char *value) {
   for (int_t i = 0; i <= this->length; i++) {
     this->value[i] = value[i];
   }
@@ -29,7 +29,7 @@ void String::setValue(const char *value) {
   this->length = lengthof(value);
 
   this->value = new char[this->length + 1];
-  this->_initValue(value);
+  this->_copyfrom(value);
 };
 
 String &String::append(const String &other) {
@@ -259,10 +259,9 @@ String &String::cpy(const String &other) {
   return *this;
 }
 
-String *String::split(String delimiter, int_t &outCount) {
+String *String::split(const String delimiter, int_t &outCount) {
   //
   int_t delen = delimiter.length;
-
   if (delen == 0) {
     outCount = this->length;
     String *arr = new String[outCount];
@@ -270,35 +269,88 @@ String *String::split(String delimiter, int_t &outCount) {
     for (int_t i = 0; i < outCount; i++) {
       arr[i] = String(this->value[i]);
     }
-
-    for (int_t i = 0; i < outCount; i++) {
-      std::cout << " arr[i] " << i << " " << arr[i] << std::endl;
-    }
-
     return arr;
   }
-  //
 
-  // int_t index = 0;
-  // int_t count = 0;
+  int_t start = 0;
+  int_t arrSize = this->countOccurrences(delimiter) + 1;
 
-  // while (index < this->length) {
+  outCount = arrSize;
+  String *arr = new String[outCount];
 
-  // if (delimiter.cmp() == 0) {
-  //   index += delen;
-  //   count++;
-  // } else {
-  //   break;
-  // }
-  //
+  // split parts
+  int_t arrIndex = 0;
+  for (int_t i = 0; i <= this->length - delen;) {
+    // bool match = true;
+    bool match = this->substr(i, delen) == delimiter;
+    if (match) {
+      int_t len = i - start;
+      char *sub = new char[len + 1];
+      for (int_t k = 0; k < len; k++) {
+        sub[k] = this->value[start + k];
+      }
+      sub[len] = '\0';
+      arr[arrIndex++] = String(sub);
+      delete[] sub;
 
-  return nullptr;
+      i += delen;
+      start = i;
+    } else {
+      i++;
+    }
+  }
+
+  // last part
+  int_t len = this->length - start;
+  char *sub = new char[len + 1];
+  for (int_t k = 0; k < len; k++) {
+    sub[k] = this->value[start + k];
+  }
+  sub[len] = '\0';
+  arr[arrIndex++] = String(sub);
+  delete[] sub;
+
+  return arr;
 }
 
 Iterator<char> String::begin() { return Iterator<char>(this->value); }
 
 Iterator<char> String::end() {
   return Iterator<char>(this->value + this->length);
+}
+
+bool String::includes(String searchString) {
+  // search string must be less than or equal to this->length
+  if (searchString.length > this->length)
+    return false;
+
+  // limit the search
+  int_t limit = this->length - searchString.length + 1;
+  for (int_t i = 0; i < limit; i++) {
+    // substring must equal search string
+    String substr = this->substr(i, searchString.length);
+    if (substr == searchString) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+int_t String::countOccurrences(String target) {
+  if (target.length > this->length)
+    return 0;
+
+  int_t count = 0;
+  int_t limit = this->length - target.length + 1;
+  for (int_t i = 0; i < limit; i++) {
+    String substr = this->substr(i, target.length);
+    if (substr == target) {
+      count++;
+    }
+  }
+
+  return count;
 }
 
 //-------------------- Static functions --------------------//

@@ -38,8 +38,46 @@ public:
 };
 
 int main() {
+  String s1 = "hellllo world ";
+  int count = 0;
+  String *arr = s1.split("l", count);
+  std::cout << count << " c-" << std::endl;
+  for (size_t i = 0; i < count; i++) {
+    std::cout << " -> " << i << " :" << arr[i] << ":" << std::endl;
+  }
+  delete[] arr;
   WinTest win_test;
+  if (0) {
+    std::cout << "------------<String::countOccurrences>------------"
+              << std::endl;
+    String s1 = "hello world world";
+    String g = "  f f f f f f f  f f f f f f f  f f f f f f f";
 
+    win_test.it("should return 2", s1.countOccurrences("world") == 2);
+    // win_test.it("should return 3", g.countOccurrences(" ") == 3);
+    std::cout << (g.countOccurrences("  f f f f f f f")) << std::endl;
+  }
+  return 0;
+
+  if (10) {
+    std::cout << "------------<String::countOccurrences>------------"
+              << std::endl;
+    String s1 = "hello world world";
+    String g = "hello ggg world worlsd ggg  ggg ";
+
+    win_test.it("should return 2", s1.countOccurrences("world") == 2);
+    win_test.it("should return 3", g.countOccurrences("ggg") == 3);
+  }
+
+  if (10) {
+    std::cout << "------------<String::includes>------------" << std::endl;
+    String s1 = "hello world world";
+    String g = "hello ggg world worlsd ggg  ggg ";
+
+    win_test.it("should return true", s1.includes("world"));
+    win_test.it("should return false", !s1.includes("worlds"));
+    win_test.it("should return true", g.includes("ggg"));
+  }
   if (10) {
     std::cout << "------------<String::Iterator>------------" << std::endl;
     String s1 = "12345";

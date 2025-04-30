@@ -21,7 +21,7 @@ String::String() : value(nullptr), length(0) {
 String::String(const char *value) : String() {
   this->length = lengthof(value);
   this->value = new char[this->length + 1];
-  this->_initValue(value);
+  this->_copyfrom(value);
 }
 
 /**
@@ -35,7 +35,7 @@ String::String(const char *value) : String() {
 String::String(std::string value) : String() {
   this->length = value.length();
   this->value = new char[this->length + 1];
-  this->_initValue(value.c_str());
+  this->_copyfrom(value.c_str());
 }
 
 /**
