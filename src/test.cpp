@@ -1,5 +1,6 @@
 #include "Console.cpp"
 #include "String.hpp"
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -37,9 +38,27 @@ public:
   }
 };
 
+int sum(int a, int b, int (*add3)(int, int)) {
+  int c = add3(a, b);
+  return c;
+}
 int main() {
+
+  // Call function using pointer
+
+  int result = sum(1, 2, [](int a, int b) { return a + b + 3; });
+
+  std::cout << result << std::endl;
+  return 0;
+}
+
+/*********/
+/*
+int main322() {
+
   String s1 = "hellllo world ";
   int count = 0;
+
   String *arr = s1.split("l", count);
   std::cout << count << " c-" << std::endl;
   for (size_t i = 0; i < count; i++) {
@@ -47,6 +66,7 @@ int main() {
   }
   delete[] arr;
   WinTest win_test;
+
   if (0) {
     std::cout << "------------<String::countOccurrences>------------"
               << std::endl;
@@ -230,3 +250,4 @@ int main() {
 
   return 0;
 }
+*/

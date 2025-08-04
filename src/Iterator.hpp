@@ -12,13 +12,16 @@ public:
 
   T &operator*() { return *ptr; }
 
+  T *base() const { return ptr; }
+
   Iterator &operator++() {
-    ptr++;
+    ++ptr;
     return *this;
   }
-  Iterator &operator++(int) {
-    ptr++;
-    return *this;
+  Iterator operator++(int) {
+    Iterator temp = *this; // save current state
+    ++(*this);             // use prefix increment
+    return temp;           // return old state
   }
   bool operator!=(const Iterator &other) const { return ptr != other.ptr; }
 };
